@@ -40,7 +40,11 @@ async function loadPlanets() {
   });
 }
 
+const getAllPlanets = () =>{
+  return habitablePlanets;
+}
+
 module.exports = {
   loadPlanets,
-  planets: habitablePlanets,
+  getAllPlanets
 };
