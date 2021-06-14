@@ -1,4 +1,4 @@
-const { getAllLaunches, addNewLaunch } = require("../../models/launches.model");
+const { getAllLaunches, addNewLaunch, abortLaunch, existsLaunchWithId } = require("../../models/launches.model");
 
 const httpGetAllLaunches = (req, res) => {
   res.status(200).json(getAllLaunches());
@@ -10,7 +10,7 @@ const httpAddNewLaunch = (req, res) => {
     !launch.mission ||
     !launch.rocket ||
     !launch.launchDate ||
-    !launch.destination
+    !launch.target
   ) {
     return res.status(400).json({ error: "Missing required fields" });
   }
@@ -23,7 +23,17 @@ const httpAddNewLaunch = (req, res) => {
   return res.status(201).json(launch);
 };
 
+const httpAbortLaunch = (req, res) =>{
+    const launchId = +req.params.id;
+    if(!existsLaunchWithId(launchId)){
+        return res.status(400).json({error: "Invalid launch id"});
+    }
+    const deletedLaunch = abortLaunch(launchId);
+    return res.status(200).json(deletedLaunch);
+}
+
 module.exports = {
   httpGetAllLaunches,
   httpAddNewLaunch,
+  httpAbortLaunch,
 };
