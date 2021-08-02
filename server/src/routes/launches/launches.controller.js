@@ -1,10 +1,15 @@
-const { getAllLaunches, addNewLaunch, abortLaunch, existsLaunchWithId } = require("../../models/launches.model");
+const {
+  getAllLaunches,
+  scheduleNewLaunch,
+  abortLaunch,
+  existsLaunchWithId,
+} = require("../../models/launches.model");
 
-const httpGetAllLaunches = (req, res) => {
-  res.status(200).json(getAllLaunches());
+const httpGetAllLaunches = async (req, res) => {
+  res.status(200).json(await getAllLaunches());
 };
 
-const httpAddNewLaunch = (req, res) => {
+const httpAddNewLaunch = async (req, res) => {
   const launch = req.body;
   if (
     !launch.mission ||
@@ -14,23 +19,37 @@ const httpAddNewLaunch = (req, res) => {
   ) {
     return res.status(400).json({ error: "Missing required fields" });
   }
-  
+
   launch.launchDate = new Date(launch.launchDate);
-  if(isNaN(launch.launchDate)){
-      return res.status(400).json({error: "Invalid date"})
+  if (isNaN(launch.launchDate)) {
+    return res.status(400).json({ error: "Invalid date" });
   }
-  addNewLaunch(launch);
-  return res.status(201).json(launch);
+  try {
+    await scheduleNewLaunch(launch);
+    return res.status(201).json(launch);
+  } catch (err) {
+    if (err.message === "No matching planet found")
+      return res.status(500).json({ error: "No matching planet found" });
+  }
 };
 
-const httpAbortLaunch = (req, res) =>{
+const httpAbortLaunch = async (req, res) => {
+  try {
     const launchId = +req.params.id;
-    if(!existsLaunchWithId(launchId)){
-        return res.status(400).json({error: "Invalid launch id"});
+    const existsLauch = await existsLaunchWithId(launchId);
+    if (!existsLauch) {
+      return res.status(400).json({ error: "Invalid launch id" });
     }
-    const deletedLaunch = abortLaunch(launchId);
-    return res.status(200).json(deletedLaunch);
-}
+    const isLaunchdeleted = await abortLaunch(launchId);
+    if (isLaunchdeleted) {
+      return res.status(200).json({ ok: true });
+    } else {
+      return res.status(200).json({ ok: false });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: "An error occured" });
+  }
+};
 
 module.exports = {
   httpGetAllLaunches,
