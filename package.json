@@ -1,5 +1,5 @@
 {
-  "name": "Nasa-project",
+  "name": "nasa-project",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,8 @@
     "server": "npm run watch --prefix server",
     "start": "npm run client & npm run server",
     "deploy": "npm run build --prefix client && npm start --prefix server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm test --prefix client && npm test --prefix server",
+    "test:ci": "npm test --prefix client && npm run test:ci --prefix server"
   },
   "keywords": [],
   "author": "",

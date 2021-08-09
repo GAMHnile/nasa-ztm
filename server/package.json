@@ -12,7 +12,8 @@
   "scripts": {
     "start": "cd src && node server.js",
     "watch": "cd src && nodemon server.js",
-    "test": "jest --watchAll --testTimeout=10000"
+    "test": "jest --watchAll --testTimeout=10000",
+    "test:ci": "jest --testTimeout=10000"
   },
   "keywords": [],
   "author": "",
