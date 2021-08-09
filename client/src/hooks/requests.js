@@ -1,4 +1,4 @@
-const serverRoot = "http://localhost:8000";
+const serverRoot = "http://localhost:8000/v1";
 
 async function httpGetPlanets() {
   // Load planets and return as JSON.
@@ -27,15 +27,15 @@ async function httpSubmitLaunch(launch) {
     const response = await fetch(`${serverRoot}/launches`, {
       method: "post",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(launch)
-    })
+      body: JSON.stringify(launch),
+    });
     return response;
   } catch (err) {
     return {
-      ok: false
-    }
+      ok: false,
+    };
   }
 }
 
@@ -44,12 +44,12 @@ async function httpAbortLaunch(id) {
   try {
     const response = await fetch(`${serverRoot}/launches/${id}`, {
       method: "delete",
-    })
+    });
     return response;
   } catch (err) {
     return {
-      ok: false
-    }
+      ok: false,
+    };
   }
 }
 

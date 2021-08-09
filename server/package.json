@@ -3,10 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "jest": {
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "./src/test/jest.setup.js"
+    ]
+  },
   "scripts": {
     "start": "cd src && node server.js",
     "watch": "cd src && nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watchAll --testTimeout=10000"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +26,8 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "jest": "^27.0.6",
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.4"
   }
 }
